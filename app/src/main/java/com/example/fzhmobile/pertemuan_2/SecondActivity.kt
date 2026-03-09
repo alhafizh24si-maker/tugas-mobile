@@ -28,7 +28,7 @@ class SecondActivity : AppCompatActivity() {
         btnSubmit.setOnClickListener {
             //Mengambil value dari inputNama dan menampilkan di Logcat
             val nama = inputNama.text
-            Log.e("Klik btnSubmit","Tombol berhasil di tekan. Isi dari inputNama = $nama")
+            //Log.e("Klik btnSubmit","Tombol berhasil di tekan. Isi dari inputNama = $nama")
 
             Toast.makeText(this, "Halo $nama", Toast.LENGTH_SHORT).show()
         }
