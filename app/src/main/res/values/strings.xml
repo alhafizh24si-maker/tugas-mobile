@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Fzh mobile</string>
+    <string name="halaman_login">Verifikasi Login</string>
+
 </resources>
