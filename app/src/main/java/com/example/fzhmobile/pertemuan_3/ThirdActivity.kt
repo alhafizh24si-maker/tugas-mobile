@@ -25,8 +25,8 @@ class ThirdActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-//        val btnKirim : Button = findViewById (R.id.btnKirim)
-//        val noTujuan : EditText = findViewById (R.id.inputNoTujuan)
+        val btnKirim : Button = findViewById (R.id.btnKirim)
+        val noTujuan : EditText = findViewById (R.id.inputNoTujuan)
 
         binding.btnKirim.setOnClickListener{
             val nomor = binding.inputNoTujuan.text

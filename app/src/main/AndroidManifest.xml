@@ -12,13 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FzhMobile">
         <activity
+            android:name=".pertemuan_3.ThirdActivity"
+            android:exported="false" />
+        <activity
             android:name=".pertemuan_3.ThirdResultActivity"
             android:exported="false" />
         <activity
             android:name=".pertemuan_2.SecondActivity"
             android:exported="true" />
         <activity
-            android:name=".pertemuan_3.ThirdActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".pertemuan_4.FourthActivity"
             android:exported="false" />
     </application>
 
