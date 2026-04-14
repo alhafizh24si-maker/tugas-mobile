@@ -1,58 +1,76 @@
 package com.example.fzhmobile.pertemuan_5
 
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.View
+import android.webkit.WebChromeClient
+import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.fzhmobile.R
-import com.example.fzhmobile.databinding.ActivityFifthBinding
 import com.example.fzhmobile.databinding.ActivityWebViewBinding
 
 class WebViewActivity : AppCompatActivity() {
+
+    // Gunakan private lateinit agar binding bisa diakses di semua fungsi (termasuk onBackPressed)
+    private lateinit var binding: ActivityWebViewBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        var binding = ActivityWebViewBinding.inflate(layoutInflater)
+
+        binding = ActivityWebViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        // Mengaktifkan toolbar
+
+        // --- IMPROVISASI 1: Konfigurasi Toolbar ---
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
-            title = "Web Merdeka"
+            title = "Web Portal"
             setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         }
 
-        binding.webView.webViewClient = WebViewClient()
-        binding.webView.settings.javaScriptEnabled = true
-        binding.webView.loadUrl("https://www.merdeka.com/")
-
-        binding.webView.webViewClient = WebViewClient()
-        binding.webView.settings.javaScriptEnabled = true
-        binding.webView.loadUrl("https://www.merdeka.com/")
-
-        // Agar Toolbar hide/show saat scroll web
-        binding.webView.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-            if (scrollY > oldScrollY) {
-                binding.appBar.setExpanded(false, true) // sembunyikan
-            } else if (scrollY < oldScrollY) {
-                binding.appBar.setExpanded(true, true) // tampilkan
+        // --- IMPROVISASI 2: Progress Bar Real-time ---
+        binding.webView.webChromeClient = object : WebChromeClient() {
+            override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.progressBar.progress = newProgress
+                if (newProgress == 100) {
+                    binding.progressBar.visibility = View.GONE
+                }
             }
         }
+
+        // Konfigurasi WebView
+        binding.webView.webViewClient = WebViewClient()
+        binding.webView.settings.javaScriptEnabled = true
+        binding.webView.loadUrl("https://portal-guest.alwaysdata.net/login")
     }
+
+    // --- IMPROVISASI 3: Penanganan Tombol Back yang Benar ---
     override fun onBackPressed() {
-        var binding = ActivityWebViewBinding.inflate(layoutInflater)
+        // JANGAN inflate lagi di sini. Gunakan binding yang sudah ada.
         if (binding.webView.canGoBack()) {
-            binding.webView.goBack() // Kembali ke halaman web sebelumnya
+            binding.webView.goBack()
         } else {
-            super.onBackPressed() // Keluar activity sebelumnya
+            super.onBackPressed()
         }
+    }
+
+    // Menangani tombol back di Toolbar
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

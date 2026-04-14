@@ -56,6 +56,11 @@ class FifthActivity : AppCompatActivity() {
                 Toast.makeText(this, "Settings Clicked", Toast.LENGTH_SHORT).show()
                 true
             }
+            // Tambahkan ID sub-menu jika ingin memberi aksi spesifik
+            R.id.sub_profile -> {
+                Toast.makeText(this, "Membuka Profil...", Toast.LENGTH_SHORT).show()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
