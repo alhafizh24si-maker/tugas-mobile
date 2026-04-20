@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.example.fzhmobile.databinding.ActivityAuthBinding
+import com.example.fzhmobile.pertemuan_4.FourthActivity
 
 class AuthActivity : AppCompatActivity() {
 
@@ -17,6 +18,18 @@ class AuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //Kode ini harus selalu dipanggil saat butuh akses "user_pref"
+        val sharedPref = getSharedPreferences("user_pref", MODE_PRIVATE)
+
+//        //Kondisi jika isLogin bernilai true
+//        val isLogin = sharedPref.getBoolean("isLogin", false)
+//        if (isLogin) {
+//            val intent =Intent (this, MainActivity::class.java)
+//            startActivity(intent)
+//            finish()
+//            //Panggil Intent untuk ke MainActivity
+//        }
 
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -26,7 +39,12 @@ class AuthActivity : AppCompatActivity() {
             val pass = binding.etPassword.text.toString()
 
             if (user == pass && user.isNotEmpty()) {
-                // Pindah ke MainActivity
+
+                val editor = sharedPref.edit()
+                editor.putBoolean("isLogin", true)
+                editor.putString("user",user)
+                editor.apply()
+
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()

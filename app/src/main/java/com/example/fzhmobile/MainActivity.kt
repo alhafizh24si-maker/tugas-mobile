@@ -13,12 +13,15 @@ import com.example.fzhmobile.pertemuan_5.FifthActivity
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.edit
 
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val sharedPref = getSharedPreferences("user_pref", MODE_PRIVATE)
         setContentView(R.layout.activity_main)
+
 
         val btnLogout = findViewById<Button>(R.id.btnLogout)
 
@@ -27,6 +30,8 @@ class MainActivity : AppCompatActivity() {
                 .setTitle("Konfirmasi Logout")
                 .setMessage("Apakah Anda yakin ingin keluar?")
                 .setPositiveButton("Ya") { _, _ ->
+
+                    sharedPref.edit { clear() }
 
                     val intent = Intent(this, AuthActivity::class.java)
                     startActivity(intent)
