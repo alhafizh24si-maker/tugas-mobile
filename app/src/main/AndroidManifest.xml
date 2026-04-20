@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FzhMobile">
         <activity
+            android:name=".pertemuan_5.FifthActivity"
+            android:exported="false" />
+        <activity
             android:name=".pertemuan_5.WebViewActivity"
             android:exported="false" />
         <activity
@@ -29,7 +32,7 @@
             android:name=".pertemuan_2.SecondActivity"
             android:exported="true" />
         <activity
-            android:name=".pertemuan_5.FifthActivity"
+            android:name=".AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

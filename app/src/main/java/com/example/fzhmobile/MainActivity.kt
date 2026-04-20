@@ -10,34 +10,30 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.fzhmobile.databinding.ActivityMainBinding
 import com.example.fzhmobile.pertemuan_4.FourthActivity
 import com.example.fzhmobile.pertemuan_5.FifthActivity
+import android.widget.Button
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-        binding.btnKirim.setOnClickListener {
-            val intent = Intent(this, FourthActivity::class.java)
+        setContentView(R.layout.activity_main)
 
-            /*tambahkan bagian berikut*/
-            intent.putExtra("name", "Politeknik Caltex Riau")
-            intent.putExtra("from", "Rumbai")
-            intent.putExtra("age", 25)
+        val btnLogout = findViewById<Button>(R.id.btnLogout)
 
-            startActivity(intent)
-        }
-        binding.btnLima.setOnClickListener {
-            val intent = Intent(this, FifthActivity::class.java)
-            startActivity(intent)
+        btnLogout.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Konfirmasi Logout")
+                .setMessage("Apakah Anda yakin ingin keluar?")
+                .setPositiveButton("Ya") { _, _ ->
+
+                    val intent = Intent(this, AuthActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+                .setNegativeButton("Tidak", null)
+                .show()
         }
     }
 }
