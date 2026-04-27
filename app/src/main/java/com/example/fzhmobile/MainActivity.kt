@@ -6,11 +6,11 @@ import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
-import com.example.fzhmobile.pertemuan_2.SecondActivity
-import com.example.fzhmobile.pertemuan_3.ThirdActivity
-import com.example.fzhmobile.pertemuan_4.FourthActivity
-import com.example.fzhmobile.pertemuan_5.FifthActivity
-import com.example.fzhmobile.pertemuan_7.SevenActivity
+import com.example.fzhmobile.Home.pertemuan_2.SecondActivity
+import com.example.fzhmobile.Home.pertemuan_3.ThirdActivity
+import com.example.fzhmobile.Home.pertemuan_4.FourthActivity
+import com.example.fzhmobile.Home.pertemuan_5.FifthActivity
+import com.example.fzhmobile.Home.pertemuan_7.SevenActivity
 import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {

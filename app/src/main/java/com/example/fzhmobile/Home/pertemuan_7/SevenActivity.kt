@@ -1,4 +1,4 @@
-package com.example.fzhmobile.pertemuan_7
+package com.example.fzhmobile.Home.pertemuan_7
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

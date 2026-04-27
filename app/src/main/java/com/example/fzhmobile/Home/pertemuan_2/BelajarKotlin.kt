@@ -1,4 +1,4 @@
-package com.example.fzhmobile.pertemuan_2
+package com.example.fzhmobile.Home.pertemuan_2
 
 fun main(){
     println("Hai rekan rekan...")

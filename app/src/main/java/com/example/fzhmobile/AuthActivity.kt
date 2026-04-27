@@ -1,16 +1,10 @@
 package com.example.fzhmobile
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import android.content.Intent
-import android.widget.Button
-import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.example.fzhmobile.databinding.ActivityAuthBinding
-import com.example.fzhmobile.pertemuan_4.FourthActivity
 
 class AuthActivity : AppCompatActivity() {
 
