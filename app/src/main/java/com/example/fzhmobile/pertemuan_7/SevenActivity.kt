@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.example.fzhmobile.R
 import com.example.fzhmobile.databinding.ActivitySevenBinding
 
@@ -25,7 +26,7 @@ class SevenActivity : AppCompatActivity() {
             insets
         }
 
-        // Konfigurasi Toolbar
+
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             title = "Activity Seven"
@@ -35,9 +36,30 @@ class SevenActivity : AppCompatActivity() {
             // Pastikan ic_arrow_back ada di folder res/drawable
             setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         }
+        // Menampilkan fragment pertama secara default
+        replaceFragment(SatuFragment())
+
+        // Setup event click untuk mengganti fragment
+        binding.btnFragment1.setOnClickListener {
+            replaceFragment(SatuFragment())
+        }
+
+        binding.btnFragment2.setOnClickListener {
+            replaceFragment(DuaFragment())
+        }
+
+        binding.btnFragment3.setOnClickListener {
+            replaceFragment(TigaFragment())
+        }
     }
 
-    // PERBAIKAN 2: Tambahkan fungsi ini agar tombol back berfungsi saat diklik
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(binding.fragmentContainer.id, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressedDispatcher.onBackPressed()
         return true
