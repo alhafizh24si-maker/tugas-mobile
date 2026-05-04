@@ -17,6 +17,7 @@ import com.example.fzhmobile.Home.pertemuan_3.ThirdActivity
 import com.example.fzhmobile.Home.pertemuan_4.FourthActivity
 import com.example.fzhmobile.Home.pertemuan_5.FifthActivity
 import com.example.fzhmobile.Home.pertemuan_7.SevenActivity
+import com.example.fzhmobile.Home.pertemuan_9.NinthActivity
 import com.example.fzhmobile.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -59,6 +60,11 @@ class HomeFragment : Fragment() {
 
         binding.btnSeven.setOnClickListener {
             moveActivity(SevenActivity::class.java)
+        }
+
+        binding.btnPertemuan9.setOnClickListener {
+            val intent = Intent(requireContext(), NinthActivity::class.java)
+            startActivity(intent)
         }
 
         // Logika Logout

@@ -16,7 +16,6 @@ class SevenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // PERBAIKAN 1: Gunakan binding.root sebagai content view
         binding = ActivitySevenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -26,42 +25,67 @@ class SevenActivity : AppCompatActivity() {
             insets
         }
 
-
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             title = "Activity Seven"
             subtitle = "Ini adalah subtitle"
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            // Pastikan ic_arrow_back ada di folder res/drawable
             setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         }
-        // Menampilkan fragment pertama secara default
-        replaceFragment(SatuFragment())
 
-        // Setup event click untuk mengganti fragment
+        // PERBAIKAN 1: Tampilkan fragment pertama TANPA addToBackStack
+        // Gunakan check savedInstanceState agar tidak re-create fragment saat rotasi layar
+        if (savedInstanceState == null) {
+            replaceFragment(SatuFragment(), false)
+        }
+
+        // Setup event click dengan parameter true agar bisa di-back
         binding.btnFragment1.setOnClickListener {
-            replaceFragment(SatuFragment())
+            replaceFragment(SatuFragment(), true)
         }
 
         binding.btnFragment2.setOnClickListener {
-            replaceFragment(DuaFragment())
+            replaceFragment(DuaFragment(), true)
         }
 
         binding.btnFragment3.setOnClickListener {
-            replaceFragment(TigaFragment())
+            replaceFragment(TigaFragment(), true)
         }
     }
 
+    // PERBAIKAN 2: Tambahkan parameter isBackStack
+    private fun replaceFragment(fragment: Fragment, isBackStack: Boolean) {
+        val fragmentManager = supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+
+        // Opsional: Cek agar tidak replace ke fragment yang sama (mencegah tumpukan double)
+        val currentFragment = fragmentManager.findFragmentById(binding.fragmentContainer.id)
+        if (currentFragment?.javaClass == fragment.javaClass) return
+
+        transaction.replace(binding.fragmentContainer.id, fragment)
+
+        // Hanya masukkan ke stack jika diperintahkan (biasanya untuk klik tombol)
+        if (isBackStack) {
+            transaction.addToBackStack(null)
+        }
+
+        transaction.commit()
+    }
+
+    // Overload function agar tidak error saat dipanggil di onCreate awal
     private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(binding.fragmentContainer.id, fragment)
-            .addToBackStack(null)
-            .commit()
+        replaceFragment(fragment, true)
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
+        // PERBAIKAN 3: Cek jumlah stack sebelum back
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            // Jika stack kosong, berarti kita di fragment utama, maka tutup activity
+            finish()
+        }
         return true
     }
 }
