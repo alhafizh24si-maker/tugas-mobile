@@ -6,6 +6,7 @@ import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import com.example.fzhmobile.Home.pertemuan_10.TenActivity
 import com.example.fzhmobile.Home.pertemuan_2.SecondActivity
 import com.example.fzhmobile.Home.pertemuan_3.ThirdActivity
 import com.example.fzhmobile.Home.pertemuan_4.FourthActivity
@@ -41,6 +42,10 @@ class MainActivity : AppCompatActivity() {
         // Pertemuan 7
         findViewById<Button>(R.id.btnSeven).setOnClickListener {
             startActivity(Intent(this, SevenActivity::class.java))
+        }
+
+        findViewById<Button>(R.id.btnTen).setOnClickListener {
+            startActivity(Intent(this, TenActivity::class.java))
         }
 
         // --- Logika Logout ---

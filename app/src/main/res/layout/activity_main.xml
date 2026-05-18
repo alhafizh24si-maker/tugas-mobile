@@ -95,6 +95,12 @@
                 android:layout_height="wrap_content"
                 android:text="Pertemuan 7" />
 
+            <Button
+                android:id="@+id/btnTen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pertemuan 10" />
+
         </LinearLayout>
 
         <Button

@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.fzhmobile.AuthActivity
+import com.example.fzhmobile.Home.pertemuan_10.TenActivity
 import com.example.fzhmobile.Home.pertemuan_2.SecondActivity
 import com.example.fzhmobile.Home.pertemuan_3.ThirdActivity
 import com.example.fzhmobile.Home.pertemuan_4.FourthActivity
@@ -64,6 +65,11 @@ class HomeFragment : Fragment() {
 
         binding.btnPertemuan9.setOnClickListener {
             val intent = Intent(requireContext(), NinthActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnTen.setOnClickListener {
+            val intent = Intent(requireContext(), TenActivity::class.java)
             startActivity(intent)
         }
 
