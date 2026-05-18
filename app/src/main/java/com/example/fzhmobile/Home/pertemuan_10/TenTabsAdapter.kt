@@ -14,6 +14,7 @@ class TenthTabsAdapter(activity: FragmentActivity) : FragmentStateAdapter(activi
         return when (position) {
             0 -> TabAFragment()
             1 -> TabBFragment()
+
             else -> throw IllegalStateException("Posisi tidak valid")
         }
     }
