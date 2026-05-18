@@ -3,6 +3,7 @@ package com.example.fzhmobile.Home.pertemuan_10
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.fzhmobile.R
@@ -39,8 +40,23 @@ class TenActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             // Atur judul untuk setiap tab
             when (position) {
-                0 -> tab.text = "Tab A"
-                1 -> tab.text = "Tab B"
+                0 -> {
+                    tab.text = "Tab A"
+                    //Tambah Icon
+                    tab.icon = ContextCompat.getDrawable(  this, R.drawable.ic_home)
+                    //Tambah Badge Tanpa nomor (hanya titik)
+                    val badge = tab.getOrCreateBadge()
+                    badge.isVisible = true
+                }
+                1 -> {
+                    tab.text = "Tab B"
+                    //Tambah Icon
+                    tab.icon = ContextCompat.getDrawable(  this, R.drawable.ic_home)
+                    //Tambah Badge dengan nomor
+                    val badge = tab.getOrCreateBadge()
+                    badge.isVisible = true
+                    badge.number = 5
+                }
             }
         }.attach()
 
