@@ -15,6 +15,9 @@
         android:theme="@style/Theme.FzhMobile"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Message.tutorial.TutorialMessageActivity"
+            android:exported="false" />
+        <activity
             android:name=".Home.pertemuan_10.TenActivity"
             android:exported="false" />
         <activity
@@ -52,6 +55,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
