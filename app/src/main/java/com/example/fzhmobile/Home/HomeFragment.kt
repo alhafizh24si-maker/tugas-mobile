@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fzhmobile.AuthActivity
 import com.example.fzhmobile.Home.pertemuan_10.TenActivity
 import com.example.fzhmobile.Home.pertemuan_2.SecondActivity
@@ -19,7 +21,11 @@ import com.example.fzhmobile.Home.pertemuan_4.FourthActivity
 import com.example.fzhmobile.Home.pertemuan_5.FifthActivity
 import com.example.fzhmobile.Home.pertemuan_7.SevenActivity
 import com.example.fzhmobile.Home.pertemuan_9.NinthActivity
+import com.example.fzhmobile.Home.photo.PhotoAdapter
+import com.example.fzhmobile.data.api.CatFactApiClient
+import com.example.fzhmobile.data.api.PhotoApiClient
 import com.example.fzhmobile.databinding.FragmentHomeBinding
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -36,13 +42,17 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
         (requireActivity() as AppCompatActivity).supportActionBar?.apply {
             title = "Home"
         }
         val sharedPref = requireContext().getSharedPreferences("user_pref", MODE_PRIVATE)
 
-        // Menggunakan binding untuk menggantikan findViewById
+        // ==========================================
+        // Logika Klik Tombol Pertemuan (Bawaan)
+        // ==========================================
         binding.btnSecond.setOnClickListener {
             moveActivity(SecondActivity::class.java)
         }
@@ -77,12 +87,52 @@ class HomeFragment : Fragment() {
         binding.btnLogout.setOnClickListener {
             showLogoutDialog()
         }
+
+        // ==========================================
+        // Aksi REST API & Refresh Button
+        // ==========================================
+        binding.btnRefresh.setOnClickListener {
+            loadCatFact()
+        }
+
+        // Panggil otomatis saat fragment aktif di layar
+        loadCatFact()
+        loadPhoto()
     }
 
     // Fungsi pembantu untuk pindah Activity agar kode tidak berulang
     private fun moveActivity(cls: Class<*>) {
         val intent = Intent(requireContext(), cls)
         startActivity(intent)
+    }
+
+    // Mengambil Fakta Kucing via Retrofit
+    private fun loadCatFact() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val response = CatFactApiClient.apiService.getCatFact()
+                binding.tvCatFact.text = "\"${response.fact}\""
+            } catch (e: Exception) {
+                binding.tvCatFact.text = "Gagal mengambil fakta kucing."
+            }
+        }
+    }
+
+    // Mengambil Galeri Foto via Retrofit (Tambahan dari panduan Picsum)
+    private fun loadPhoto() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val photos = PhotoApiClient.apiService.getPhotos()
+                val adapter = PhotoAdapter(photos)
+                binding.rvGallery.adapter = adapter
+
+                // Set layout manager agar tampil secara vertikal standar
+                binding.rvGallery.layoutManager = LinearLayoutManager(requireContext())
+
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Gagal memuat gambar", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun showLogoutDialog() {
