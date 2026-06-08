@@ -140,6 +140,12 @@
                         android:layout_height="wrap_content"
                         android:text="Pertemuan 10" />
 
+                    <Button
+                        android:id="@+id/btnThirteenth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pertemuan 13" />
+
                     <TextView
                         android:id="@+id/tvCatFact"
                         android:layout_width="match_parent"

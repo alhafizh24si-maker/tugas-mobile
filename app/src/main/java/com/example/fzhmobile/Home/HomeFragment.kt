@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.fzhmobile.AuthActivity
 import com.example.fzhmobile.Home.pertemuan_10.TenActivity
+import com.example.fzhmobile.Home.pertemuan_13.ThirteenthActivity
 import com.example.fzhmobile.Home.pertemuan_2.SecondActivity
 import com.example.fzhmobile.Home.pertemuan_3.ThirdActivity
 import com.example.fzhmobile.Home.pertemuan_4.FourthActivity
@@ -81,6 +82,10 @@ class HomeFragment : Fragment() {
         binding.btnTen.setOnClickListener {
             val intent = Intent(requireContext(), TenActivity::class.java)
             startActivity(intent)
+        }
+
+        binding.btnThirteenth.setOnClickListener {
+            moveActivity(ThirteenthActivity::class.java)
         }
 
         // Logika Logout
