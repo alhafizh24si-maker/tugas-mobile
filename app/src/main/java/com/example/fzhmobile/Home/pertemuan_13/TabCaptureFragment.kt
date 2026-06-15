@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,9 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.fzhmobile.databinding.FragmentTabCaptureBinding
+import com.example.fzhmobile.utils.PermissionHelper
 
 class TabCaptureFragment : Fragment() {
 
@@ -37,11 +36,13 @@ class TabCaptureFragment : Fragment() {
         }
     }
 
-    // Menangani dialog konfirmasi izin (permission runtime) kamera
+    // Menangani dialog konfirmasi izin kamera
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
         if (isGranted) {
+            // Jika user menekan "Izinkan/Allow", langsung buka kamera
             openCamera()
         } else {
+            // Jika user menekan "Tolak/Deny"
             Toast.makeText(context, "Izin kamera diperlukan untuk mengambil foto", Toast.LENGTH_SHORT).show()
         }
     }
@@ -57,33 +58,32 @@ class TabCaptureFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Logika tombol sesuai yang Anda minta agar memicu Notifikasi/Dialog Permission
         binding.btnCapture.setOnClickListener {
-            if (hasCameraPermission()) {
-                openCamera()
+            if (!PermissionHelper.hasPermission(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                )
+            ) {
+                PermissionHelper.requestPermission(
+                    permissionLauncher,
+                    Manifest.permission.CAMERA
+                )
             } else {
-                permissionLauncher.launch(Manifest.permission.CAMERA)
+                openCamera()
             }
         }
-    }
-
-    private fun hasCameraPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
-            // Generate alamat tempat penyimpanan dan nama foto secara dinamis di dalam MediaStore
             currentPhotoUri = createGalleryPhotoUri()
-
             intent.putExtra(MediaStore.EXTRA_OUTPUT, currentPhotoUri)
             cameraLauncher.launch(intent)
         } catch (e: Exception) {
             e.printStackTrace()
-            Toast.makeText(context, "Gagal membuka kamera atau membuat file: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Gagal membuka kamera: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -102,6 +102,6 @@ class TabCaptureFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // Mencegah kebocoran memori (memory leak)
+        _binding = null
     }
 }

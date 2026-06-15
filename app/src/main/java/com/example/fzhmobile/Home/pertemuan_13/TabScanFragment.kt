@@ -1,7 +1,6 @@
 package com.example.fzhmobile.Home.pertemuan_13
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,6 +18,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.fzhmobile.databinding.FragmentTabScanBinding
+// Import PermissionHelper Anda (Sesuaikan package-nya jika berbeda)
+import com.example.fzhmobile.utils.PermissionHelper
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -33,17 +34,17 @@ class TabScanFragment : Fragment() {
 
     private lateinit var cameraExecutor: ExecutorService
 
-    // Inisialisasi scanner khusus hanya mendeteksi format QR Code
+    // Inisialisasi scanner khusus format QR Code
     private val scanner = BarcodeScanning.getClient(
         BarcodeScannerOptions.Builder()
             .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
             .build()
     )
 
-    // Launcher untuk meminta izin (runtime permission) kamera secara modern
+    // Launcher izin kamera secara modern
     private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
         if (isGranted) {
-            startCamera()
+            openCamera()
         } else {
             Toast.makeText(context, "Izin kamera diperlukan untuk fitur scan", Toast.LENGTH_SHORT).show()
         }
@@ -60,28 +61,33 @@ class TabScanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Membuat single thread executor untuk menangani kalkulasi pemrosesan gambar di background
+        // Membuat single thread executor untuk penanganan kalkulasi di background
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        if (hasCameraPermission()) {
-            startCamera()
-        } else {
-            permissionLauncher.launch(Manifest.permission.CAMERA)
+        // Logika klik tombol Capture sesuai permintaan Anda
+        binding.btnCapture.setOnClickListener {
+            if (!PermissionHelper.hasPermission(
+                    requireActivity(),
+                    Manifest.permission.CAMERA
+                )
+            ) {
+                PermissionHelper.requestPermission(
+                    permissionLauncher,
+                    Manifest.permission.CAMERA
+                )
+            } else {
+                openCamera()
+            }
         }
     }
 
-    private fun hasCameraPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun startCamera() {
+    /**
+     * Membuka dan menginisialisasi kamera (Sebelumnya bernama startCamera)
+     */
+    private fun openCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener({
-            // Membuka CameraProvider yang telah siap digunakan
             val cameraProvider = cameraProviderFuture.get()
 
             // Mengonfigurasi Preview Jendela Bidik Kamera (ViewFinder)
@@ -100,12 +106,11 @@ class TabScanFragment : Fragment() {
                 }
 
             try {
-                // Lepaskan siklus hidup kamera yang menempel sebelumnya sebelum mengikat ulang
                 cameraProvider.unbindAll()
 
                 // Ikat komponen kamera ke siklus hidup Fragment ini
                 cameraProvider.bindToLifecycle(
-                    viewLifecycleOwner, // Menggunakan viewLifecycleOwner agar aman bagi Fragment
+                    viewLifecycleOwner,
                     CameraSelector.DEFAULT_BACK_CAMERA,
                     preview,
                     imageAnalyzer
@@ -124,13 +129,11 @@ class TabScanFragment : Fragment() {
             return
         }
 
-        // Mempersiapkan objek InputImage dari media bingkai kamera dasar
         val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
         scanner.process(image)
             .addOnSuccessListener { barcodes ->
                 if (barcodes.isNotEmpty()) {
-                    // Ambil hasil string mentah dari data indeks pertama QR
                     val rawValue = barcodes[0].rawValue
                     activity?.runOnUiThread {
                         binding.tvScanResult.text = "Hasil: $rawValue"
@@ -141,15 +144,14 @@ class TabScanFragment : Fragment() {
                 Log.e("TabScanFragment", "Proses scan gagal", e)
             }
             .addOnCompleteListener {
-                // Sangat Penting: Selalu tutup imageProxy agar kamera terus mengirimkan frame baru
                 imageProxy.close()
             }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // Menghindari kebocoran memori (memory leak)
-        scanner.close() // Menutup engine ML Kit scanner
-        cameraExecutor.shutdown() // Mematikan alur kerja background thread kamera
+        _binding = null
+        scanner.close()
+        cameraExecutor.shutdown()
     }
 }
